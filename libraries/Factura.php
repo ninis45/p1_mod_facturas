@@ -40,7 +40,6 @@ class Factura
         $root = $xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3', '*');///$xml->getElementsByTagName('Comprobante');
         
        
-       
         foreach($root as $element)
         {
             ($element->getAttribute('version') || $element->getAttribute('Version')) AND $data['version']     = $element->getAttribute('version')?$element->getAttribute('version'):$element->getAttribute('Version');
@@ -67,29 +66,52 @@ class Factura
         $addenda      = $xml->getElementsByTagNameNS('http://www.sat.gob.mx/cfd/3','Addenda');
         
         
-        /*$registrofiscal = $xml->getElementsByTagNameNS('http://www.sat.gob.mx/registrofiscal','*');
-        
-        foreach($registrofiscal as $element)
-        {
-            
-            
-            $xml->documentElement->removeChild($element);
-        }*/
         foreach($addenda as $element)
         {
             
             
             $xml->documentElement->removeChild($element);
         }
-         
+       
         
         
+        /*
       
+        foreach($elements as $element)
+        {
+            
+            
+            $element->getAttribute('version') AND $data['version']     = $element->getAttribute('version');
+            $element->getAttribute('sello') AND $data['sello']  = $element->getAttribute('sello');
+            $element->getAttribute('certificado') AND $data['cert'] = $element->getAttribute('certificado');
+            
+            if(empty($extra)== false)
+            {
+                foreach($extra as $ele)
+                {
+                    $element->getAttribute($ele) AND $data[$ele] = $element->getAttribute($ele);
+                }
+            }
+           
+            
+        }*/
         
         $openssl_algo = OPENSSL_ALGO_SHA1;
         switch($data['version'])
         {
-           
+            /*case '3.0':
+            
+                $validate = $xml->schemaValidate(dirname(__FILE__).'/files/cfdv3.xsd');
+                $xsl->load(dirname(__FILE__).'/files/cadenaoriginal_3_0.xslt');
+            break;
+            case '3.2':
+                $validate = $xml->schemaValidate(dirname(__FILE__).'/files/cfdv32.xsd');
+                $xsl->load(dirname(__FILE__).'/files/cadenaoriginal_3_2.xslt');
+            break;
+            default:
+                $validate = false;
+            break;
+            */
             case '3.0':
             
                 $validate = $xml->schemaValidate(self::$_path.'/facturacion/cfdv3.xsd');
@@ -108,16 +130,10 @@ class Factura
                 $openssl_algo = OPENSSL_ALGO_SHA256;
             break;
             default:
-                
-                
                 $validate = false;
-                
-                
             break;
         }
-        //print_r(self::_display_xml_errors());
-        //print_r($validate);
-        //print_r($data);
+        
         if(!$validate)
         {
             
