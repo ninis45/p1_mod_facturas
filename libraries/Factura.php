@@ -24,11 +24,6 @@ class Factura
         
         $file = Files::get_file($id);
         
-        if(!$file['status'])
-        {
-            return $file;
-        }
-        
         libxml_use_internal_errors(true);
         
         $xml = new DOMDocument();
